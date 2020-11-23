@@ -18,6 +18,7 @@ df = pd.read_csv('data.csv', index_col=0)
 
 new_observation = [spf, dkim, dmarc, v_ratio, c_ratio]
 
-df.loc[len(df)] = new_observation
+df.loc[len(df)+1] = new_observation
+print("Added new observation to row: {} in dataframe".format(len(df)))
 
 df.to_csv('data.csv')
