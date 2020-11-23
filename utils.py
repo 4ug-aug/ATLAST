@@ -38,25 +38,37 @@ class identifier(object):
     # Fetch DKIM from the mail body
     # If it is passed return 1 else 0
     def dkim(self):
-        if re.findall(r"dkim=(pass)", self.source)[0]:
-            return 1
-        else:
+        try:
+            if re.findall(r"dkim=(pass)", self.source)[0]:
+                print("Found DKIM Pass")
+                return 1
+            else:
+                return 0
+        except Exception:
             return 0
 
     # Fetch DMARC from the mail body
     # If it is none return 1 else 0
     def dmarc(self):
-        if re.findall(r"dmarc=(none)", self.source)[0]:
-            return 1
-        else:
+        try:
+            if re.findall(r"dmarc=(none)", self.source)[0]:
+                print("Found DMARC none")
+                return 1
+            else:
+                return 0
+        except Exception:
             return 0
 
     # Fetch SPF from the mail body
     # If it is passed return 1 else 0
     def spf(self):
-        if re.findall(r"spf=(pass)", self.source)[0]:
-            return 1
-        else:
+        try:
+            if re.findall(r"spf=(pass)", self.source)[0]:
+                print("Found SPF Pass")
+                return 1
+            else:
+                return 0
+        except Exception:
             return 0
 
     # Fetch all URLS from the mail body
