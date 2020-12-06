@@ -1,4 +1,4 @@
-,SPF,DKIM,DMARC,Vowel Ratio,Consonant Ratio,Sender, Avg UrlScanio score, Maliciousnes
-1,1,1,0,0.1822388138177612,0.8177611861822388,isicdanmark@e.isicdanmark.dk,0.0,0.0
-2,0,0,0,0.0,0.0,accounts@riotgames.com,,
-3,0,0,0,0.0,0.0,accounts@riotgames.com,,
+,SPF,DKIM,DMARC,Vowel Ratio,Consonant Ratio,Sender, Return-Path, Sender-IP, Return-From, Avg UrlScanio score, Maliciousnes
+1,1,1,0,0.1822388138177612,0.8177611861822388,isicdanmark@e.isicdanmark.dk,0,0.0.0.0,0,0.0,0.0
+2,pass,pass,pass,0.0,0.0,<no-reply@primevideo.com>,20201205182752c0fcd0e5b063427b870dec2121f0p0eu-C3TNSY4SMN7DHP@bounces.primevideo.com,54.240.0.56,1,0.0,0.0
+3,pass,none,pass,0.0,0.0,oracle-acct_ww@oracle.com,bounce-66@pesharedservices-in-mx.appoci.oracle.com,130.35.20.251,1,0.0,0.0
