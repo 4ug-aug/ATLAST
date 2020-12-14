@@ -14,12 +14,11 @@ Afterwards the systems should analyse each mail parallel to the clients operatio
 
 """
 from utils import identifier as identify
+from getEmails import fetchHeaders
 import utils
-import numpy as np
+import commit
 import pandas as pd
-import re, platform
-import imaplib
-
+import platform
 
 live = False
 if platform.system() == "Windows":
@@ -27,19 +26,21 @@ if platform.system() == "Windows":
     import win32com.client
     import pythoncom
 
-utils.__init__()
-emails = utils.get_mails(1)
-
-print(len(emails))
-
-def parse(mailobject):
+def parse_live(mailobject):
+    
     x = identify(mailobject, live)
 
     spf, dkim, dmarc, v_ratio, c_ratio, sender = x.spf(), x.dkim(), x.dmarc(), x.ratio_char()[0], x.ratio_char()[1], x.sender_address()
 
-    urlScan = utils.scanURL(x.urls())
-    m_score = urlScan[0]
-    maliciousnes = urlScan[1]
+    urls = x.urls()
+
+    m_score = None
+    maliciousnes = None
+
+    if urls:
+        urlScan = utils.scanURL(urls)
+        m_score = urlScan[0]
+        maliciousnes = urlScan[1]
 
     df = pd.read_csv('data.csv', index_col=0)
 
@@ -49,6 +50,31 @@ def parse(mailobject):
     print("Added new observation to row: {} in dataframe".format(len(df)))
 
     df.to_csv('data.csv')
+
+
+    print("pushing new database to github")
+    commit.commit_database()
+
+def parse(MailsToGet):
+
+    df = pd.read_csv('data.csv', index_col=0)
+
+    emails = fetchHeaders(MailsToGet)
+
+    for tuple_ in emails:
+
+        new_observation = [tuple_[-3], tuple_[-2], tuple_[-1], 0, 0,tuple_[2],tuple_[1], tuple_[-4], tuple_[0], 0, 0]
+
+        df.loc[len(df)+1] = new_observation
+        print("Added new observation to row: {} in dataframe".format(len(df)))
+
+        df.to_csv('data.csv')
+
+
+    print("pushing new database to github")
+    commit.commit_database()
+
+parse(15)
 
 def run_live():
     class Handler_Class(object):
@@ -66,9 +92,12 @@ def run_live():
                 mail = outlook.Session.GetItemFromID(ID)
                 
                 print("parsing new email to database")
-                parse(mail)
+                parse_live(mail)
 
     outlook = win32com.client.DispatchWithEvents("Outlook.Application", Handler_Class)
 
     #and then an infinit loop that waits from events.
     pythoncom.PumpMessages()
+
+
+
